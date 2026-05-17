@@ -12,7 +12,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const url = `https://openapi.rakuten.co.jp/services/api/BooksBook/Search/20170404?format=json&applicationId=${appId}&accessKey=${accessKey}&affiliateId=${affiliateId}&booksGenreId=001001&keyword=${encodeURIComponent(keyword)}&hits=10&sort=sales`;
 
   try {
-    const response = await fetch(url);
+    const response = await fetch(url, {
+      headers: {
+        "Referer": "https://manga-base-xi.vercel.app"
+      }
+    });
     const data = await response.json();
     res.status(200).json(data);
   } catch (error) {
