@@ -25,7 +25,6 @@ interface GenreSection {
 
 // ── ジャンル別TOP5セクション ──
 const GENRE_SECTIONS: GenreSection[] = [
-const GENRE_SECTIONS: GenreSection[] = [
   { label: "少年・アクション", emoji: "🔥", keyword: "001001", color: "#e63946" },
   { label: "異世界・ファンタジー", emoji: "🐉", keyword: "001008", color: "#7c3aed" },
   { label: "恋愛・ラブコメ", emoji: "💕", keyword: "001006", color: "#ec4899" },
