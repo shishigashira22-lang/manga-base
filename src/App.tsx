@@ -32,7 +32,7 @@ const GENRE_SECTIONS: GenreSection[] = [
   { label: "ミステリー・サスペンス", emoji: "🔍", keyword: "ミステリー漫画 サスペンス", color: "#d97706" },
   { label: "グルメ・日常", emoji: "🍜", keyword: "グルメ漫画 日常", color: "#0891b2" },
 ];
-
+const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 const GENRE_GROUPS = [
   { label: "── すべて ──", options: ["すべて"] },
   { label: "🥊 バトル・アクション", options: ["アクション","バトル・格闘","武道・武侠","ミリタリー・戦争","サバイバル"] },
@@ -114,13 +114,15 @@ function GenreTop5Section({ section, onClick }: { section: GenreSection; onClick
   const [mangas, setMangas] = useState<Manga[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    fetchManga(section.keyword).then((data) => {
+ useEffect(() => {
+    const load = async () => {
+      await delay(GENRE_SECTIONS.indexOf(section) * 1200);
+      const data = await fetchManga(section.keyword);
       setMangas(data);
       setLoading(false);
-    });
-  }, [section.keyword]);
-
+    };
+    load();
+  }, [section]);
   return (
     <div style={{
       background: "#0f0f1e",
