@@ -25,12 +25,13 @@ interface GenreSection {
 
 // ── ジャンル別TOP5セクション ──
 const GENRE_SECTIONS: GenreSection[] = [
-  { label: "少年・アクション", emoji: "🔥", keyword: "少年漫画 アクション", color: "#e63946" },
-  { label: "異世界・ファンタジー", emoji: "🐉", keyword: "異世界転生 漫画", color: "#7c3aed" },
-  { label: "恋愛・ラブコメ", emoji: "💕", keyword: "恋愛漫画 ラブコメ", color: "#ec4899" },
-  { label: "スポーツ", emoji: "⚽", keyword: "スポーツ漫画", color: "#059669" },
-  { label: "ミステリー・サスペンス", emoji: "🔍", keyword: "ミステリー漫画 サスペンス", color: "#d97706" },
-  { label: "グルメ・日常", emoji: "🍜", keyword: "グルメ漫画 日常", color: "#0891b2" },
+const GENRE_SECTIONS: GenreSection[] = [
+  { label: "少年・アクション", emoji: "🔥", keyword: "001001", color: "#e63946" },
+  { label: "異世界・ファンタジー", emoji: "🐉", keyword: "001008", color: "#7c3aed" },
+  { label: "恋愛・ラブコメ", emoji: "💕", keyword: "001006", color: "#ec4899" },
+  { label: "スポーツ", emoji: "⚽", keyword: "001010", color: "#059669" },
+  { label: "ミステリー・サスペンス", emoji: "🔍", keyword: "001004", color: "#d97706" },
+  { label: "グルメ・日常", emoji: "🍜", keyword: "001017", color: "#0891b2" },
 ];
 const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 const GENRE_GROUPS = [
