@@ -1,7 +1,7 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 
-const RAKUTEN_APP_ID = "75054f15-f670-4ab8-8b3c-9017b07116f7";
-const RAKUTEN_AFFILIATE_ID = "0c1b4d96.f8d4f15b.0c1b4d97.6857f611";
+const RAKUTEN_APP_ID = process.env.RAKUTEN_APP_ID || "";
+const RAKUTEN_AFFILIATE_ID = process.env.RAKUTEN_AFFILIATE_ID || "";
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   res.setHeader("Access-Control-Allow-Origin", "*");
