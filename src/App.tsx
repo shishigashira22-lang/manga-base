@@ -191,8 +191,8 @@ function MangaModal({ manga, onClose }: { manga: Manga | null; onClose: () => vo
   const [submitted, setSubmitted] = useState(false);
   if (!manga) return null;
   return (
-    <div onClick={onClose} style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.88)", zIndex: 100, display: "flex", alignItems: "center", justifyContent: "center", padding: 20 }}>
-      <div onClick={(e) => e.stopPropagation()} style={{ background: "#13131f", border: "1px solid #2a2a3e", borderRadius: 16, maxWidth: 580, width: "100%", maxHeight: "90vh", overflowY: "auto", position: "relative" }}>
+    <div onClick={onClose} style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0, background: "rgba(0,0,0,0.88)", zIndex: 1000, display: "flex", alignItems: "center", justifyContent: "center", padding: 20 }}>
+      <div onClick={(e) => e.stopPropagation()} style={{ background: "#13131f", border: "1px solid #2a2a3e", borderRadius: 16, maxWidth: 580, width: "100%", maxHeight: "90vh", overflowY: "auto", position: "relative", zIndex: 1001 }}>
         <div style={{ display: "flex", gap: 18, padding: "22px 22px 0" }}>
           <img src={manga.cover} alt={manga.title} style={{ width: 110, height: 156, objectFit: "cover", borderRadius: 8, flexShrink: 0, background: "#1a1a2e" }}
             onError={(e) => { (e.target as HTMLImageElement).src = `https://picsum.photos/seed/${manga.id}/200/280`; }} />
