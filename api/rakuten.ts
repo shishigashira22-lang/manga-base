@@ -14,8 +14,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
     const response = await fetch(url, {
       headers: {
-        "Authorization": `Bearer ${accessKey}`,
-        "Referer": "https://manga-base-xi.vercel.app"
+        "Referer": "https://www.rakuten.co.jp/",
+        "Origin": "https://www.rakuten.co.jp"
       }
     });
     const data = await response.json();
