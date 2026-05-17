@@ -5,10 +5,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   res.setHeader("Cache-Control", "no-store");
 
   const appId = process.env.RAKUTEN_APP_ID || "";
+  const accessKey = process.env.RAKUTEN_ACCESS_KEY || "";
   const affiliateId = process.env.RAKUTEN_AFFILIATE_ID || "";
   const keyword = (req.query.keyword as string) || "漫画";
 
-  const url = `https://app.rakuten.co.jp/services/api/BooksBook/Search/20170404?format=json&applicationId=${appId}&affiliateId=${affiliateId}&booksGenreId=001001&keyword=${encodeURIComponent(keyword)}&hits=10&sort=sales`;
+  const url = `https://app.rakuten.co.jp/services/api/BooksBook/Search/20170404?format=json&applicationId=${appId}&accessKey=${accessKey}&affiliateId=${affiliateId}&booksGenreId=001001&keyword=${encodeURIComponent(keyword)}&hits=10&sort=sales`;
 
   try {
     const response = await fetch(url);
