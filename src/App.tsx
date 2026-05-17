@@ -54,16 +54,16 @@ async function fetchManga(keyword: string): Promise<Manga[]> {
     if (!data.Items) return [];
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return data.Items.slice(0, 5).map((item: any, idx: number) => ({
-      id: item.isbn || `${keyword}-${idx}`,
-      title: item.title,
-      author: item.author || "不明",
-      cover: item.largeImageUrl || item.mediumImageUrl || "",
-      description: item.itemCaption || "",
-      price: item.itemPrice ? `${item.itemPrice.toLocaleString()}円` : "価格不明",
-      publisher: item.publisherName || "",
-      year: item.salesDate ? parseInt(item.salesDate.slice(0, 4)) : 2020,
+      id: item.Item.isbn || `${keyword}-${idx}`,
+      title: item.Item.title,
+      author: item.Item.author || "不明",
+      cover: item.Item.largeImageUrl || item.Item.mediumImageUrl || "",
+      description: item.Item.itemCaption || "",
+      price: item.Item.itemPrice ? `${item.Item.itemPrice.toLocaleString()}円` : "価格不明",
+      publisher: item.Item.publisherName || "",
+      year: item.Item.salesDate ? parseInt(item.Item.salesDate.slice(0, 4)) : 2020,
       rank: idx + 1,
-      affiliateUrl: item.affiliateUrl || item.itemUrl || "#",
+      affiliateUrl: item.Item.affiliateUrl || item.Item.itemUrl || "#",
       rating: Math.round((Math.random() * 1.5 + 3.5) * 10) / 10,
       reviews: Math.floor(Math.random() * 3000 + 200),
     }));
