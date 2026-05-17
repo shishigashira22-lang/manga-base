@@ -9,15 +9,16 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const affiliateId = process.env.RAKUTEN_AFFILIATE_ID || "";
   const keyword = (req.query.keyword as string) || "漫画";
   const sort = (req.query.sort as string) || "sales";
+  const genreId = (req.query.genreId as string) || "001001001";
 
-  const isGenreId = /^\d{9}$/.test(keyword);
-
-  let url = "";
-  if (isGenreId) {
-    url = `https://openapi.rakuten.co.jp/services/api/BooksBook/Search/20170404?format=json&applicationId=${appId}&accessKey=${accessKey}&affiliateId=${affiliateId}&booksGenreId=${keyword}&hits=10&sort=${encodeURIComponent(sort)}`;
-  } else {
-    url = `https://openapi.rakuten.co.jp/services/api/BooksBook/Search/20170404?format=json&applicationId=${appId}&accessKey=${accessKey}&affiliateId=${affiliateId}&booksGenreId=001001&keyword=${encodeURIComponent(keyword)}&hits=10&sort=${encodeURIComponent(sort)}`;
-  }
+  const url = "https://openapi.rakuten.co.jp/services/api/BooksBook/Search/20170404"
+    + "?format=json"
+    + "&applicationId=" + appId
+    + "&accessKey=" + accessKey
+    + "&affiliateId=" + affiliateId
+    + "&booksGenreId=" + genreId
+    + "&hits=10"
+    + "&sort=" + encodeURIComponent(sort);
 
   try {
     const response = await fetch(url, {
