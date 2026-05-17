@@ -25,14 +25,12 @@ interface GenreSection {
 
 // ── ジャンル別TOP5セクション ──
 const GENRE_SECTIONS: GenreSection[] = [
-  { label: "少年・アクション", emoji: "🔥", keyword: "001001", color: "#e63946" },
-  { label: "異世界・ファンタジー", emoji: "🐉", keyword: "001008", color: "#7c3aed" },
-  { label: "恋愛・ラブコメ", emoji: "💕", keyword: "001006", color: "#ec4899" },
-  { label: "スポーツ", emoji: "⚽", keyword: "001010", color: "#059669" },
-  { label: "ミステリー・サスペンス", emoji: "🔍", keyword: "001004", color: "#d97706" },
-  { label: "グルメ・日常", emoji: "🍜", keyword: "001017", color: "#0891b2" },
+  { label: "少年マンガ", emoji: "🔥", keyword: "001001001", color: "#e63946" },
+  { label: "少女マンガ", emoji: "💕", keyword: "001001002", color: "#ec4899" },
+  { label: "青年マンガ", emoji: "📖", keyword: "001001003", color: "#7c3aed" },
+  { label: "レディースマンガ", emoji: "👑", keyword: "001001004", color: "#f59e0b" },
 ];
-const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
 const GENRE_GROUPS = [
   { label: "── すべて ──", options: ["すべて"] },
   { label: "🥊 バトル・アクション", options: ["アクション","バトル・格闘","武道・武侠","ミリタリー・戦争","サバイバル"] },
@@ -46,10 +44,13 @@ const GENRE_GROUPS = [
   { label: "💼 大人向け", options: ["青年マンガ","ビジネス・仕事","政治・社会","エッセイ・実録"] },
 ];
 
+// ── 遅延関数 ──
+const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
 // ── API呼び出し（Vercelサーバー経由）──
-async function fetchManga(keyword: string): Promise<Manga[]> {
+async function fetchManga(keyword: string, sort: string = "sales"): Promise<Manga[]> {
   try {
-    const res = await fetch(`/api/rakuten?keyword=${encodeURIComponent(keyword)}`);
+    const res = await fetch(`/api/rakuten?keyword=${encodeURIComponent(keyword)}&sort=${encodeURIComponent(sort)}`);
     const data = await res.json();
     if (!data.Items) return [];
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -64,8 +65,8 @@ async function fetchManga(keyword: string): Promise<Manga[]> {
       year: item.Item.salesDate ? parseInt(item.Item.salesDate.slice(0, 4)) : 2020,
       rank: idx + 1,
       affiliateUrl: item.Item.affiliateUrl || item.Item.itemUrl || "#",
-      rating: Math.round((Math.random() * 1.5 + 3.5) * 10) / 10,
-      reviews: Math.floor(Math.random() * 3000 + 200),
+      rating: item.Item.reviewAverage || Math.round((Math.random() * 1.5 + 3.5) * 10) / 10,
+      reviews: item.Item.reviewCount || Math.floor(Math.random() * 3000 + 200),
     }));
   } catch {
     return [];
@@ -110,19 +111,22 @@ function MiniCard({ manga, rank, onClick, accentColor }: { manga: Manga; rank: n
 }
 
 // ── GenreTop5Section ──
-function GenreTop5Section({ section, onClick }: { section: GenreSection; onClick: (m: Manga) => void }) {
+function GenreTop5Section({ section, onClick, sort }: { section: GenreSection; onClick: (m: Manga) => void; sort: string }) {
   const [mangas, setMangas] = useState<Manga[]>([]);
   const [loading, setLoading] = useState(true);
 
- useEffect(() => {
+  useEffect(() => {
     const load = async () => {
+      setLoading(true);
+      setMangas([]);
       await delay(GENRE_SECTIONS.indexOf(section) * 1200);
-      const data = await fetchManga(section.keyword);
+      const data = await fetchManga(section.keyword, sort);
       setMangas(data);
       setLoading(false);
     };
     load();
-  }, [section]);
+  }, [section, sort]);
+
   return (
     <div style={{
       background: "#0f0f1e",
@@ -242,6 +246,7 @@ export default function App() {
   const [aiRec, setAiRec] = useState("");
   const [aiLoading, setAiLoading] = useState(false);
   const [aiResult, setAiResult] = useState<string | null>(null);
+  const [homeSort, setHomeSort] = useState("sales");
 
   const loadMangas = useCallback(async () => {
     setLoading(true);
@@ -288,6 +293,14 @@ export default function App() {
     cursor: "pointer", background: "none", border: "none", fontSize: "0.88rem", transition: "all 0.2s",
   });
 
+  const sortButtonStyle = (value: string): React.CSSProperties => ({
+    background: homeSort === value ? "#e63946" : "#13131f",
+    color: homeSort === value ? "#fff" : "#888",
+    border: `1px solid ${homeSort === value ? "#e63946" : "#2a2a3e"}`,
+    borderRadius: 8, padding: "7px 14px", fontWeight: 700,
+    fontSize: "0.8rem", cursor: "pointer", transition: "all 0.2s",
+  });
+
   return (
     <div style={{ minHeight: "100vh", background: "#0d0d18", color: "#e0e0f0", fontFamily: "'Noto Sans JP', sans-serif" }}>
       <style>{`
@@ -320,13 +333,26 @@ export default function App() {
         {/* ── HOME：ジャンル別TOP5 ── */}
         {tab === "home" && (
           <div className="fade-in">
-            <div style={{ marginBottom: 24 }}>
-              <div style={{ fontFamily: "'Zen Maru Gothic', serif", fontWeight: 900, fontSize: "1.2rem", color: "#f0f0f0", marginBottom: 4 }}>ジャンル別 TOP 5</div>
-              <div style={{ fontSize: "0.82rem", color: "#555" }}>楽天ブックスの売上データをリアルタイム取得</div>
+            <div style={{ marginBottom: 24, display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 12 }}>
+              <div>
+                <div style={{ fontFamily: "'Zen Maru Gothic', serif", fontWeight: 900, fontSize: "1.2rem", color: "#f0f0f0", marginBottom: 4 }}>ジャンル別 TOP 5</div>
+                <div style={{ fontSize: "0.82rem", color: "#555" }}>楽天ブックスの売上データをリアルタイム取得</div>
+              </div>
+              <div style={{ display: "flex", gap: 8 }}>
+                {[
+                  { label: "売上順", value: "sales" },
+                  { label: "評価順", value: "reviewAverage" },
+                  { label: "レビュー数", value: "reviewCount" },
+                ].map((s) => (
+                  <button key={s.value} onClick={() => setHomeSort(s.value)} style={sortButtonStyle(s.value)}>
+                    {s.label}
+                  </button>
+                ))}
+              </div>
             </div>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))", gap: 20 }}>
               {GENRE_SECTIONS.map((section) => (
-                <GenreTop5Section key={section.keyword} section={section} onClick={setSelected} />
+                <GenreTop5Section key={`${section.keyword}-${homeSort}`} section={section} onClick={setSelected} sort={homeSort} />
               ))}
             </div>
           </div>
